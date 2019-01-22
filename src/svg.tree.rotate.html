@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>eChart.js / tree.rotate</title>
+    <title>eChart.js / svg.tree.rotate</title>
     <link rel="stylesheet" href="../node_modules/easycss-core/build/easycss.min.css">
     <script src="../node_modules/clay-core/build/clay-core.js"></script>
     <script src="../node_modules/clay-2d/build/clay-2d.js"></script>
@@ -14,6 +14,47 @@
 </head>
 
 <body>
+
+    <script>
+
+        var bezier = $svg.bezier().setType(340, 340, "circle").setL(50);
+
+        $$('<svg></svg>').attr('width', 700).attr('height', 700).appendTo('body').find('g').data($chart.tree({
+
+            // 目标树
+            "type": "circle",
+            "radius": 300, "cx": 350, "cy": 350,
+
+            // 数据结构
+            "root": initTree => initTree,
+            "child": parentTree => parentTree.children,
+            "id": treedata => treedata.name
+
+        })(program.data).node).enter('g').appendTo('svg')
+            .attr('id', data => data.id).attr('left', data => data.left).attr('top', data => data.top)
+            .loop(function (data, index, target) {
+
+                window.setTimeout(function () {
+
+                    // 绘制连线
+                    if (data.pid) {
+                        var pnode = $$('[id=' + data.pid + ']');
+                        $$('<path>')
+                            .css({ "fill": "none", "stroke": "gray" })
+                            .attr('d', bezier(+pnode.attr('left'), +pnode.attr('top'), data.left, data.top))
+                            .appendTo(target)
+                    }
+
+                    // 绘制结点
+                    $$('<circle stroke-width="1" fill="red" r="3">')
+                        .attr('cx', data.left).attr('cy', data.top).css("fill", "#ea779e")
+                        .appendTo(target);
+
+                }, index * 50);
+
+            });
+
+    </script>
 
 </body>
 
