@@ -1,0 +1,24 @@
+{
+  "name": "echart",
+  "description": "一些常见的图标绘制实例。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chen351012/eChart.js.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chen351012/eChart.js/issues"
+  },
+  "homepage": "https://github.com/chen351012/eChart.js#readme",
+  "dependencies": {
+    "clay-2d": "^2.0.0",
+    "clay-chart": "^1.0.0",
+    "clay-core": "^2.0.2",
+    "easycss-core": "^2.0.0"
+  }
+}
