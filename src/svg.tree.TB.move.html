@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>eChart.js / svg.tree.TB.move</title>
+    <link rel="stylesheet" href="../node_modules/easycss-core/build/easycss.min.css">
+    <script src="../node_modules/clay-core/build/clay-core.js"></script>
+    <script src="../node_modules/clay-2d/build/clay-2d.js"></script>
+    <script src="../node_modules/clay-chart/build/clay-chart.js"></script>
+    <script src="../data/menu.json.js"></script>
+    <style>
+        svg {
+            user-select: none;
+            cursor: pointer;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+
+        var size = $$('body').size();
+
+        // 准备工具
+        var text = $svg.text().setSize(7).setColor('gray');
+
+        // 准备画布
+        var svg = $$('<svg><g class="line"></g></svg>').attr('width', size.width).attr('height', size.height).appendTo('body');
+
+        var isDown = false;
+        var targetID = false;
+        svg
+            // 添加交互
+            .bind('mousedown', function () {
+                isDown = true;
+            })
+            .bind('mouseup', function () {
+                isDown = false;
+                targetID = false;
+            }).bind('mousemove', function (event) {
+                if (isDown && targetID) {
+
+                    // 准备
+                    event = event || window.event;
+                    var pos = svg.position(event);
+                    var _target = $$('#' + targetID)
+
+                    // 修改结点和文字位置
+                    _target.find('circle').attr('cx', pos.x).attr('cy', pos.y);
+                    _target.find('text').attr('x', pos.x).attr('y', pos.y);
+
+                    // 修改连线
+                    svg.find('[cid=' + targetID + ']').attr('x2', pos.x).attr('y2', pos.y);
+                    svg.find('[pid=' + targetID + ']').attr('x1', pos.x).attr('y1', pos.y);
+
+                }
+            });
+
+        // 数据和结点关联
+        svg.find('g.node').data(
+
+            $chart.tree({
+                // 配置解析树图对象
+                "type": "TB",
+                "width": size.width,
+                "height": size.height,
+                // "radius": size.width / 2 > size.height / 2 ? size.height / 2 : size.width / 2,
+                "root": initTree => initTree,
+                "id": treedata => treedata.name,
+                "child": parentTree => parentTree.list
+            })
+
+                // 传递原始数据
+                // 启动计算
+                (menu).node)
+
+            // 补足不足的结点
+            .enter('g').appendTo('svg')
+
+            // 标记分组
+            // 方便后续添加交互的时候查找
+            .attr('id', data => data.id).attr('left', data => data.left).attr('top', data => data.top)
+
+            // 逐个结点绘制
+            .loop(function (data, index, target) {
+
+                window.setTimeout(function () {
+
+                    // 绘制连线
+                    var pnode = $$('#' + data.pid);
+                    if (pnode.length > 0)
+                        $$('<line stroke="#ea779e" pid="' + data.pid + '" cid="' + data.id + '">').attr('x1', +pnode.attr('left')).attr('y1', +pnode.attr('top'))
+                            .attr('x2', data.left).attr('y2', data.top)
+                            .appendTo('.line');
+
+                    // 绘制结点
+                    $$('<circle fill="white" r="20" stroke="#ea779e">')
+                        .attr('cx', data.left).attr('cy', data.top)
+                        .appendTo(target);
+
+                    // 绘制文字
+                    text(data.left, data.top, data.id).appendTo(target);
+
+                    var circle = target.find('circle');
+
+                    circle.bind('mousemove', function () {
+                        if (!targetID && isDown) {
+                            targetID = target.attr('id');
+                        }
+                    });
+
+                }, index * 50);
+
+            });
+
+    </script>
+
+</body>
+
+</html>

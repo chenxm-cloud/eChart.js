@@ -17,7 +17,7 @@
   "homepage": "https://github.com/chen351012/eChart.js#readme",
   "dependencies": {
     "clay-2d": "^2.0.0",
-    "clay-chart": "^1.0.0",
+    "clay-chart": "^1.0.1",
     "clay-core": "^2.0.4",
     "easycss-core": "^2.0.0"
   }
