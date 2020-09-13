@@ -19,6 +19,7 @@
     "clay-2d": "^2.0.0",
     "clay-chart": "^1.0.1",
     "clay-core": "^2.1.0",
-    "easycss-core": "^2.0.0"
+    "easycss-core": "^2.0.0",
+    "image2d":"1.9.0"
   }
 }
